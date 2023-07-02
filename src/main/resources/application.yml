@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: twitchBot
+name: dev-yaml
+enabled: true
+twitch:
+  socketUrl: ws://127.0.0.1:9090/ws
+  #socketUrl: ws://irc-ws.chat.twitch.tv:80
