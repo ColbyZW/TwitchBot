@@ -1,17 +1,12 @@
 package com.project.bot.service;
 
 import com.project.bot.config.property.TwitchProperties;
-import com.project.bot.model.TwitchMessage;
 import com.project.bot.model.TwitchTokenResponse;
-import com.project.bot.service.MessageHandler;
 import com.project.bot.socket.TwitchSocketClient;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 
 import java.util.HashSet;
 import java.util.Set;
