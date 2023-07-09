@@ -11,9 +11,10 @@ socket:
 server:
   ssl:
     key-store-type: PKCS12
-    key-store: classpath:selfsigned.p12
-    key-store-password: password
-    key-alias: selfsigned
+    # Place the key in the resources folder
+    key-store: classpath:<name-of-key>.p12
+    key-store-password: <key-password>
+    key-alias: <name-of-key>
     enabled: true
 
 twitch:
