@@ -1,10 +1,21 @@
 spring:
   application:
     name: twitchBot
+
 name: dev-yml
 enabled: true
+
 socket:
   socket-url: wss://irc-ws.chat.twitch.tv:443
+
+server:
+  ssl:
+    key-store-type: PKCS12
+    # Place the key in the resources folder
+    key-store: classpath:<name-of-key>.p12
+    key-store-password: <key-password>
+    key-alias: <name-of-key>
+    enabled: true
 
 twitch:
   user-auth: https://id.twitch.tv/oauth2/authorize
