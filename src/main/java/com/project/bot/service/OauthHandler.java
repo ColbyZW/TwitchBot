@@ -4,7 +4,6 @@ import com.project.bot.config.property.TwitchProperties;
 import com.project.bot.model.OauthResponse;
 import com.project.bot.model.OauthValidateResponse;
 import com.project.bot.model.TwitchTokenResponse;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -25,8 +24,9 @@ public class OauthHandler {
     private final TwitchProperties twitchProperties;
     private String oauthCode;
     private boolean startedHealthCheck = false;
-    private HashMap<String ,String> accessTokenToRefreshToken;
-    private HashMap<String, String> accessTokenToChannel;
+    private final HashMap<String ,String> accessTokenToRefreshToken = new HashMap<>();
+    private final HashMap<String, String> accessTokenToChannel = new HashMap<>();
+    private final HashMap<String, String> channelToAccessToken = new HashMap<>();
     private final Sinks.Many<TwitchTokenResponse> tokenResponseSink = Sinks.many().unicast().onBackpressureBuffer();
     private final Sinks.One<TwitchTokenResponse> botToken = Sinks.one();
 
@@ -39,9 +39,6 @@ public class OauthHandler {
     }
 
     public void addTokenPair(String accessToken, String refreshToken) {
-        if (accessTokenToRefreshToken == null) {
-            accessTokenToRefreshToken = new HashMap<>();
-        }
         accessTokenToRefreshToken.put(accessToken, refreshToken);
 
         // Start the periodic token health check in the background
@@ -52,10 +49,12 @@ public class OauthHandler {
     }
 
     public void addChannelTokenPair(String channel, String accessToken) {
-        if (accessTokenToChannel == null) {
-            accessTokenToChannel = new HashMap<>();
-        }
         accessTokenToChannel.put(accessToken, channel);
+        channelToAccessToken.put(channel, accessToken);
+    }
+
+    public String getChannelFromToken(String accessToken) {
+        return channelToAccessToken.getOrDefault(accessToken, "");
     }
 
     public Flux<TwitchTokenResponse> getTokenFlux() {
@@ -123,6 +122,7 @@ public class OauthHandler {
                     String channel = accessTokenToChannel.get(token);
                     accessTokenToChannel.remove(token);
                     accessTokenToRefreshToken.remove(token);
+                    channelToAccessToken.remove(channel);
                     addTokenPair(res.getAccess_token(), res.getRefresh_token());
                     addChannelTokenPair(channel, res.getAccess_token());
                 })
