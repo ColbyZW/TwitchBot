@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
 @Data
-@ConfigurationProperties(prefix="twitch")
+@ConfigurationProperties(prefix="socket")
 public class WebsocketProperties {
     private String socketUrl;
 }

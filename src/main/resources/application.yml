@@ -1,8 +1,17 @@
 spring:
   application:
     name: twitchBot
-name: dev-yaml
+name: dev-yml
 enabled: true
+socket:
+  socket-url: wss://irc-ws.chat.twitch.tv:443
+
 twitch:
-  socketUrl: ws://127.0.0.1:9090/ws
-  #socketUrl: ws://irc-ws.chat.twitch.tv:80
+  user-auth: https://id.twitch.tv/oauth2/authorize
+  client-id: <client-id>
+  client-secret: <client-secret>
+  redirect-uri: http://localhost:8080/oauth/redirect
+  validate-uri: https://id.twitch.tv/oauth2/validate
+  scope: chat%3Aedit+chat%3Aread
+  oauth-uri: https://id.twitch.tv/oauth2/token
+  bot-channel: <bot-channel-name>
