@@ -23,7 +23,6 @@ public class Twitch {
     private final TwitchSocketClient client;
     private final MessageHandler messageHandler;
     private final OauthHandler oauthHandler;
-    private final Sinks.Many<TwitchMessage> messageSink = Sinks.many().unicast().onBackpressureBuffer();
     private final Set<String> channelConnections = new HashSet<>();
 
     public Twitch(TwitchSocketClient client,
@@ -60,10 +59,6 @@ public class Twitch {
                 .subscribe();
     }
 
-    public Flux<TwitchMessage> getMessageFlux() {
-        return messageSink.asFlux();
-    }
-
     /**
      * Opens the initial connection to Twitch IRC
      * Also assigns the message handler
@@ -79,7 +74,6 @@ public class Twitch {
                 .thenMany(client.receive())
                 .map(msg -> messageHandler.handleMessage(msg, client))
                 .filter(msg -> !msg.isFromTwitch())
-                .doOnNext(messageSink::tryEmitNext)
                 .doOnNext(msg -> log.info("{}", msg))
                 .doOnNext(msg -> client.send("PRIVMSG " + msg.getRoomName() + " :TESTING RESPONSE"))
                 .subscribe();
